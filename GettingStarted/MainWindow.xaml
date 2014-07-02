@@ -1,0 +1,19 @@
+﻿<Window x:Class="GettingStarted.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:k="http://schemas.microsoft.com/kinect/2013"
+        Title="MainWindow" Height="900" Width="1500">
+    <Grid>
+        
+        <k:KinectSensorChooserUI HorizontalAlignment="Center" VerticalAlignment="Top" Name="sensorChooserUi" />
+        <k:KinectUserViewer VerticalAlignment="Top" HorizontalAlignment="Center" k:KinectRegion.KinectRegion="{Binding ElementName=kinectRegion}" Height="100" UserColoringMode="Manual" />
+        <k:KinectRegion Name="kinectRegion">
+            <Grid>
+                <Label Name="statusLabel" Width="300" Height="200" Content="STATUS" HorizontalAlignment="Left" />
+                
+                <k:KinectScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto" VerticalAlignment="Bottom">
+                    <StackPanel Height="1000" Width="1000" Orientation="Horizontal" Name="scrollContent" />
+                </k:KinectScrollViewer>
+            </Grid>
+        </k:KinectRegion>
+    </Grid>
+</Window>
