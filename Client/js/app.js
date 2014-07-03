@@ -1,28 +1,31 @@
 ﻿(function (THREE) {
 
-    var lightsOn = false;
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-
+    var object;
     var renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
-    var mouse3D = { x: 1, y: 1, z: 1 };
+    var mouse3D = position = { x: 1, y: 1, z: 1 };
 
-    var geometry = new THREE.CubeGeometry(1, 1, 1);
-    //var material = new THREE.MeshBasicMaterial({wireframe: false, color: 0xffffff});
-    var material = new THREE.MeshPhongMaterial({ wireframe: false, ambient: 0x555555, color: 0xaaaaaa, specular: 0x00ffff, shininess: 20, shading: THREE.SmoothShading });
-    var cube = new THREE.Mesh(geometry, material);
     var projector = new THREE.Projector();
 
-    scene.add(cube);
-    camera.position.z = 1;
+    var loader = new THREE.JSONLoader(true);
+    loader.load('./assets/models/suzanne.js', function(geometry, materials) {
+        object = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({ wireframe: false, ambient: 0x555555, color: 0xaaaaaa, specular: 0x00ffff, shininess: 20, shading: THREE.SmoothShading }));
+        object.position.set(0,0,0);
+        
+        scene.add(object);
+        render();
+    });       
+
+    
+    camera.position.z = 2;
 
     var render = function () {
         requestAnimationFrame(render);
         camera.updateProjectionMatrix();
-
-        cube.position = mouse3D;
+        object.position = mouse3D;
         renderer.render(scene, camera);
     };
 
@@ -35,10 +38,8 @@
     directionalLight.intensity = 0.3;
     scene.add(directionalLight);
 
-    render();
-
     // Events
-    //document.addEventListener('mousemove', mousemove, false);
+    document.addEventListener('mousemove', mousemove, false);
 
     function mousemove(event) {
         mouse3D = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1,   //x
@@ -47,9 +48,9 @@
         projector.unprojectVector(mouse3D, camera);
         mouse3D.sub(camera.position);
         mouse3D.normalize();
-
+        console.log(mouse3D);
     };
-
+/*
     var socket = new WebSocket('ws://10.211.55.4:8181');
 
     // When the connection is open, send some data to the server
@@ -81,5 +82,5 @@
         mouse3D.sub(camera.position);
         mouse3D.normalize();
     };
-
+*/
 })(THREE);
