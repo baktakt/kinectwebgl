@@ -50,7 +50,7 @@
 
     };
 
-    var socket = new WebSocket('ws://10.1.0.201:8181');
+    var socket = new WebSocket('ws://10.211.55.4:8181');
 
     // When the connection is open, send some data to the server
     socket.onopen = function () {
@@ -64,8 +64,6 @@
 
     // Log messages from the server
     socket.onmessage = function (e) {
-        console.log('Server: ' + e.data);
-
         var posdata = JSON.parse(e.data);
         console.log("data: " + posdata);
 

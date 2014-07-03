@@ -68,6 +68,9 @@
     <Content Include="css\common.css" />
     <Content Include="index.html" />
     <Content Include="js\app.js" />
+    <Content Include="js\KinectControls.js" />
+    <Content Include="js\vendor\OrbitControls.js" />
+    <Content Include="js\vendor\three.min.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -75,7 +78,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="assets\models\" />
-    <Folder Include="js\vendor\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

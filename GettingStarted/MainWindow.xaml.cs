@@ -116,7 +116,7 @@ namespace GettingStarted
         {
             _sockets = new List<IWebSocketConnection>();
 
-            var server = new WebSocketServer("ws://10.1.0.201:8181");
+            var server = new WebSocketServer("ws://10.211.55.4:8181");
 
             server.Start(socket =>
             {
