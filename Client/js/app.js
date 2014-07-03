@@ -65,19 +65,26 @@
     // Log messages from the server
     socket.onmessage = function (e) {
         var posdata = JSON.parse(e.data);
-        console.log("data: " + posdata);
-
+        //console.log("Left hand: " + posdata.LeftHandJointPosition.X + ", " + posdata.LeftHandJointPosition.Y + ", " + posdata.LeftHandJointPosition.Z);
+        //console.log("Right hand: " + posdata.RightHandJointPosition.X + ", " + posdata.RightHandJointPosition.Y + ", " + posdata.RightHandJointPosition.Z);
+        /*
         if (posdata.lightsOn) {
             directionalLight.intensity = 0.3;
         }
         else {
             directionalLight.intensity = 0.0;
         }
-
+        */
+        /*
         mouse3D = new THREE.Vector3((posdata.x / window.innerWidth) * 2 - 1,   //x
                                         -(posdata.y / window.innerHeight) * 2 + 1,  //y
                                         0.5);                                            //z
         projector.unprojectVector(mouse3D, camera);
+        mouse3D.sub(camera.position);
+        mouse3D.normalize();*/
+
+        //mouse3D = new THREE.Vector3(posdata.RightHandJointPosition.X, posdata.RightHandJointPosition.Y, posdata.RightHandJointPosition.Z);
+        mouse3D = new THREE.Vector3(posdata.HeadJointPosition.X, posdata.HeadJointPosition.Y, posdata.HeadJointPosition.Z * -1);
         mouse3D.sub(camera.position);
         mouse3D.normalize();
     };

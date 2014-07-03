@@ -17,6 +17,7 @@ using Microsoft.Kinect.Toolkit;
 using Microsoft.Kinect.Toolkit.Controls;
 using Fleck;
 using Microsoft.Kinect.Toolkit.Interaction;
+using Newtonsoft.Json;
 
 namespace GettingStarted
 {
@@ -30,6 +31,7 @@ namespace GettingStarted
         private static List<IWebSocketConnection> _sockets;
         static bool _initialized = false;
         private bool lightsOn = false;
+        private Skeleton[] skeletonData;
 
         public MainWindow()
         {
@@ -74,7 +76,8 @@ namespace GettingStarted
                 {
                     args.NewSensor.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
                     args.NewSensor.SkeletonStream.Enable();
-
+                    this.skeletonData = new Skeleton[args.NewSensor.SkeletonStream.FrameSkeletonArrayLength];
+                    args.NewSensor.SkeletonFrameReady += NewSensor_SkeletonFrameReady;
                     try
                     {
                         args.NewSensor.DepthStream.Range = DepthRange.Near;
@@ -99,8 +102,8 @@ namespace GettingStarted
 
             if (!error)
             {
-                KinectRegion.AddHandPointerMoveHandler(kinectRegion, OnHandleHandMove);
-                KinectRegion.AddHandPointerGripHandler(kinectRegion, OnHandleGrip);
+                //KinectRegion.AddHandPointerMoveHandler(kinectRegion, OnHandleHandMove);
+                //KinectRegion.AddHandPointerGripHandler(kinectRegion, OnHandleGrip);
                 
                 kinectRegion.KinectSensor = args.NewSensor;
 
@@ -110,8 +113,98 @@ namespace GettingStarted
             }
         }
 
+        void TrackSkeletonData()
+        { 
         
+        }
 
+        void NewSensor_SkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
+        {
+            using (SkeletonFrame skeletonFrame = e.OpenSkeletonFrame()) 
+            {
+                if (skeletonFrame != null && this.skeletonData != null) 
+                {
+                    skeletonFrame.CopySkeletonDataTo(this.skeletonData);
+                    /*
+                    if (!this.sensorChooser.Kinect.SkeletonStream.AppChoosesSkeletons) 
+                    {
+                        this.sensorChooser.Kinect.SkeletonStream.AppChoosesSkeletons = true;
+                    }
+                    float closestDistance = 10000f;
+                    int closestId = 0;
+
+                    if (this.sensorChooser.Kinect.SkeletonStream != null)
+                    {
+                        try
+                        {
+                            foreach (Skeleton skeleton in this.skeletonData.Where(s => s.TrackingState != SkeletonTrackingState.NotTracked))
+                            {
+                                if (skeleton.Position.Z < closestDistance)
+                                {
+                                    closestId = skeleton.TrackingId;
+                                }
+                            }
+                        }
+                        catch { }
+                        
+                    }
+
+                    if (closestId > 0) 
+                    {
+                        this.sensorChooser.Kinect.SkeletonStream.ChooseSkeletons(closestId);
+                    }
+                    */
+                    DataCaptured();
+                }
+            }
+        }
+
+        private void DataCaptured()
+        {
+            Skeleton skeleton = this.skeletonData.Where(s => s.TrackingState != SkeletonTrackingState.NotTracked).FirstOrDefault();
+            if (skeleton != null) 
+            {
+                var rightHandJoint = skeleton.Joints.Where(j => j.JointType == JointType.HandRight).FirstOrDefault();
+                var leftHandJoint = skeleton.Joints.Where(j => j.JointType == JointType.HandLeft).FirstOrDefault();
+                var headJoint = skeleton.Joints.Where(j => j.JointType == JointType.Head).FirstOrDefault();
+                int multiplier = 100;
+
+                UserModel trackedUser = new UserModel
+                {
+                    RightHandJointPosition = new Position3D
+                    {
+                        X = (float)(rightHandJoint.Position.X),
+                        Y = (float)(rightHandJoint.Position.Y),
+                        Z = (float)(rightHandJoint.Position.Z)
+                    },
+
+                    LeftHandJointPosition = new Position3D
+                    {
+                        X = (float)(leftHandJoint.Position.X),
+                        Y = (float)(leftHandJoint.Position.Y),
+                        Z = (float)(leftHandJoint.Position.Z)
+                    },
+
+                    HeadJointPosition = new Position3D 
+                    {
+                        X = (float)(headJoint.Position.X),
+                        Y = (float)(headJoint.Position.Y),
+                        Z = (float)(headJoint.Position.Z)
+                    }
+                };
+
+                var jsonObject = JsonConvert.SerializeObject(trackedUser);
+              
+                foreach (var socket in _sockets)
+                {
+                    socket.Send(jsonObject);
+                }
+
+                statusLabel.Content = jsonObject;
+            }
+            
+        }
+        
         private static void InitializeSockets()
         {
             _sockets = new List<IWebSocketConnection>();
