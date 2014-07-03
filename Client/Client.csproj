@@ -65,7 +65,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="css\common.css" />
     <Content Include="index.html" />
+    <Content Include="js\app.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -73,7 +75,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="assets\models\" />
-    <Folder Include="css\" />
     <Folder Include="js\vendor\" />
   </ItemGroup>
   <PropertyGroup>
