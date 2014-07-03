@@ -39,7 +39,7 @@
     scene.add(directionalLight);
 
     // Events
-    document.addEventListener('mousemove', mousemove, false);
+    //document.addEventListener('mousemove', mousemove, false);
 
     function mousemove(event) {
         mouse3D = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1,   //x
@@ -48,9 +48,8 @@
         projector.unprojectVector(mouse3D, camera);
         mouse3D.sub(camera.position);
         mouse3D.normalize();
-        console.log(mouse3D);
     };
-/*
+
     var socket = new WebSocket('ws://10.211.55.4:8181');
 
     // When the connection is open, send some data to the server
@@ -82,5 +81,5 @@
         mouse3D.sub(camera.position);
         mouse3D.normalize();
     };
-*/
+
 })(THREE);
