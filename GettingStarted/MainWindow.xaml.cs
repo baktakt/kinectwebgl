@@ -195,9 +195,12 @@ namespace GettingStarted
 
                 var jsonObject = JsonConvert.SerializeObject(trackedUser);
               
-                foreach (var socket in _sockets)
+                if(_sockets.Count > 0)
                 {
-                    socket.Send(jsonObject);
+                    foreach (var socket in _sockets)
+                    {
+                        socket.Send(jsonObject);
+                    }
                 }
 
                 statusLabel.Content = jsonObject;
@@ -209,7 +212,7 @@ namespace GettingStarted
         {
             _sockets = new List<IWebSocketConnection>();
 
-            var server = new WebSocketServer("ws://10.211.55.4:8181");
+            var server = new WebSocketServer("ws://10.1.0.165:8181");
 
             server.Start(socket =>
             {

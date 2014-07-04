@@ -7,6 +7,7 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
     var mouse3D = position = { x: 1, y: 1, z: 1 };
+    //var scalefactor = new THREE.Vector3(1,1,1);
 
     var projector = new THREE.Projector();
 
@@ -26,6 +27,7 @@
         requestAnimationFrame(render);
         camera.updateProjectionMatrix();
         object.position = mouse3D;
+        //object.scale.set(scalefactor);
         renderer.render(scene, camera);
     };
 
@@ -50,7 +52,7 @@
         mouse3D.normalize();
     };
 
-    var socket = new WebSocket('ws://10.211.55.4:8181');
+    var socket = new WebSocket('ws://10.1.0.165:8181');
 
     // When the connection is open, send some data to the server
     socket.onopen = function () {
@@ -75,18 +77,18 @@
             directionalLight.intensity = 0.0;
         }
         */
-        /*
-        mouse3D = new THREE.Vector3((posdata.x / window.innerWidth) * 2 - 1,   //x
-                                        -(posdata.y / window.innerHeight) * 2 + 1,  //y
-                                        0.5);                                            //z
-        projector.unprojectVector(mouse3D, camera);
-        mouse3D.sub(camera.position);
-        mouse3D.normalize();*/
 
-        //mouse3D = new THREE.Vector3(posdata.RightHandJointPosition.X, posdata.RightHandJointPosition.Y, posdata.RightHandJointPosition.Z);
-        mouse3D = new THREE.Vector3(posdata.HeadJointPosition.X, posdata.HeadJointPosition.Y, posdata.HeadJointPosition.Z * -1);
+
+        //mouse3D = new THREE.Vector3(posdata.RightHandJointPosition.X, posdata.RightHandJointPosition.Y, posdata.RightHandJointPosition.Z); // tracking right hand position
+        mouse3D = new THREE.Vector3(posdata.HeadJointPosition.X, posdata.HeadJointPosition.Y, 1); // tracking head position
         mouse3D.sub(camera.position);
-        mouse3D.normalize();
+
+        leftHandVector = new THREE.Vector3(0, 0, posdata.LeftHandJointPosition.Z);
+        //scalefactor = mouse3D.sub(leftHandVector);
+        scalefactor = leftHandVector;
+
+        
+        //mouse3D.normalize();
     };
 
 })(THREE);
