@@ -113,11 +113,6 @@ namespace GettingStarted
             }
         }
 
-        void TrackSkeletonData()
-        { 
-        
-        }
-
         void NewSensor_SkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
         {
             using (SkeletonFrame skeletonFrame = e.OpenSkeletonFrame()) 
@@ -269,16 +264,6 @@ namespace GettingStarted
             {
                 socket.Send(json);
             }
-        }
-
-        private void KinectSensor_SkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
-        {
-            
-        }
-
-        private void ButtonOnClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Well done!");
         }
     }
 }
